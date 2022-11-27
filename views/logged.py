@@ -32,7 +32,7 @@ def logged_page(conn, cookie):
 5 - Username (Nickname/Account Name)
 6 - Home Page
               """)
-        entry2 = input("What do you want to edit? --> ") 
+        entry2 = input("What do you want to edit? -->  ") 
         if entry2 == "1" or entry2 == "email":
             temp = input("Enter your new email: ")
             UserCommand.update_inf(conn, cookie['user'], {"email": temp})
@@ -40,7 +40,7 @@ def logged_page(conn, cookie):
             temp1 = input("\nCurrent password: ")
             temp2 = input("New Password: ")
             temp3 = input("Confirm your new password: ")
-            try: #verificar com Júnior a viabilidade dessa forma ↓
+            try: #fazer função ↓
                 if temp1 == cookie['user'].password and temp2 == temp3:
                     UserCommand.update_inf(conn, cookie['user'], {"password": temp2})
                     print("\nPassword changed successfully.")
@@ -57,7 +57,7 @@ def logged_page(conn, cookie):
             temp = UserCommand.input_date()
             UserCommand.update_inf(conn, cookie['user'], {"birthday": temp})
         if entry2 == "5" or entry2 == "username":
-            try: #verificar com Júnior a viabilidade dessa forma ↓
+            try: #fazer função ↓
                 temp1 = input("\nEnter your new username: ")
                 temp2 = input("Enter your password to confirm: ")
                 if temp2 == cookie["user"].password:

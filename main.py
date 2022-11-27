@@ -14,5 +14,10 @@ def main():
         else:
             home_page(conn, cookie)
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     main()
+=======
+if __name__ == "__main__":    
+    main()
+>>>>>>> 385521db5d960ac2e7a8429366699bd9573226e1

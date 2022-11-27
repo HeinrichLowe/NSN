@@ -13,11 +13,11 @@ def logged_page(conn, cookie):
 5 - Log Out
 6 - Exit\n""")
 
-    entry = input("What do you want to do? -->   ").lower()
+    entry = input("What do you want to do? --> ").lower()
     if entry == '1' or entry == 'my profile':
         profile = UserCommand.my_profile(conn, cookie)
         #print(len(profile))
-        print("\n   --My Profile--\n")
+        print("\n    --My Profile--\n")
         print(f"Name: {profile.full_name}")
         print(f"Birthday: {profile.birthday}")
         print(f"Username: {profile.username}")

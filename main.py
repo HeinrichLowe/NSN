@@ -15,5 +15,4 @@ def main():
             home_page(conn, cookie)
 
 if __name__ == "__main__":
-    
     main()

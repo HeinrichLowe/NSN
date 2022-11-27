@@ -8,3 +8,4 @@ def create_tables(conn):
     with conn.connect() as cur:
         Users.metadata.create_all(cur)
         Friends.metadata.create_all(cur)
+        cur.commit()

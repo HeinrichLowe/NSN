@@ -17,9 +17,9 @@ def logged_page(conn, cookie):
     if entry == '1' or entry == 'my profile':
         profile = UserCommand.my_profile(conn, cookie)
         #print(len(profile))
-        print("\n   --My Profile--\n")
+        print("\n    --My Profile--\n")
         print(f"Name: {profile.full_name}")
-        print(f"Birthday: {profile.birthday}")
+        print(f"Birthday: {(profile.birthday).strftime('%d/%m/%Y')}")
         print(f"Username: {profile.username}")
         print(f"Email: {profile.email}")
     
@@ -32,7 +32,7 @@ def logged_page(conn, cookie):
 5 - Username (Nickname/Account Name)
 6 - Home Page
               """)
-        entry2 = input("What do you want to edit? -->  ") 
+        entry2 = input("What do you want to edit? --> ") 
         if entry2 == "1" or entry2 == "email":
             temp = input("Enter your new email: ")
             UserCommand.update_inf(conn, cookie['user'], {"email": temp})

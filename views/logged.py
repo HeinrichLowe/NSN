@@ -13,7 +13,7 @@ def logged_page(conn, cookie):
 5 - Log Out
 6 - Exit\n""")
 
-    entry = input("What do you want to do? --> ").lower()
+    entry = input("What do you want to do? -->   ").lower()
     if entry == '1' or entry == 'my profile':
         profile = UserCommand.my_profile(conn, cookie)
         #print(len(profile))
@@ -32,7 +32,7 @@ def logged_page(conn, cookie):
 5 - Username (Nickname/Account Name)
 6 - Home Page
               """)
-        entry2 = input("What do you want to edit? -->  ") 
+        entry2 = input("What do you want to edit? --> ") 
         if entry2 == "1" or entry2 == "email":
             temp = input("Enter your new email: ")
             UserCommand.update_inf(conn, cookie['user'], {"email": temp})

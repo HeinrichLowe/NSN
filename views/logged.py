@@ -19,7 +19,7 @@ def logged_page(conn, cookie):
         #print(len(profile))
         print("\n    --My Profile--\n")
         print(f"Name: {profile.full_name}")
-        print(f"Birthday: {(profile.birthday).strftime('%d/%m/%Y')}")
+        print(f"Birthday: {profile.birthday.strftime('%d/%m/%Y')}")
         print(f"Username: {profile.username}")
         print(f"Email: {profile.email}")
     

@@ -1,0 +1,2 @@
+class AddFriendException(Exception):
+    pass

@@ -1,6 +1,10 @@
 from datetime import datetime
 from sqlalchemy import select, insert, update, or_, and_, not_
+from exceptions.loginexception import LoginException
+from exceptions.addfriendexception import AddFriendException
 from models.users import Users
+from models.friends import Friends
+from sqlalchemy.sql.operators import like_op
 
 class UserCommand:
     def get_all(conn):
@@ -31,7 +35,8 @@ class UserCommand:
                 return cur.execute(select(Users).where(Users.username==username).where(Users.password == password)).one()       
             except Exception as err:
                 print(err)
-                print("\nInvalid username or password.")
+                raise LoginException()
+                #print("\nInvalid username or password.")
 
     def search_by_username(conn, username):
         with conn.connect() as cur:
@@ -48,6 +53,23 @@ class UserCommand:
                 return profile
             except Exception as err:
                 print(err)
+
+    def find_user(conn, name):
+        with conn.connect() as cur:
+            try:
+                return cur.execute(select(Users.id, Users.full_name).where(Users.full_name.ilike(f"%{name}%")).order_by(Users.id.desc())).all()
+            except Exception as err:
+                print(err)
+
+    def add_friend(conn, value):
+        with conn.begin() as cur:
+            try:
+                sql = insert(Friends).values(value)
+                cur.execute(sql)
+            except Exception as err:
+                print(err)
+                raise AddFriendException()
+
 
     def input_date():
         while True:

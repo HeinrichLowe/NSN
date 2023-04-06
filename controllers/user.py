@@ -1,7 +1,11 @@
 from datetime import datetime
-from sqlalchemy import select, insert, update, or_, and_, not_
+from sqlalchemy import select, insert, update, delete, or_, and_, not_
 from exceptions.loginexception import LoginException
 from exceptions.addfriendexception import AddFriendException
+from exceptions.updateinfoexception import UpdateInfoException
+from exceptions.searchbyidexception import SearchByIDException
+from exceptions.finduserexception import FindUserException
+from exceptions.signupexception import SignUpException
 from models.users import Users
 from models.friends import Friends
 from sqlalchemy.sql.operators import like_op
@@ -10,14 +14,15 @@ class UserCommand:
     def get_all(conn):
         with conn.connect() as cur:
             return cur.execute(select(Users)).all()
-
-    def add_friend(conn, user, friend):
-        pass
-
+            
     def register(conn, value):
-        with conn.begin() as cur:
-            sql = insert(Users).values(value)
-            cur.execute(sql)
+        try:
+            with conn.begin() as cur:
+                sql = insert(Users).values(value)
+                cur.execute(sql)
+        except Exception as err:
+            print(err)
+            raise SignUpException()
 
     def update_inf(conn, user, params):
         with conn.begin() as cur:
@@ -28,6 +33,7 @@ class UserCommand:
                 cur.execute(sql)
             except Exception as err:
                 print(err)
+                raise UpdateInfoException()
 
     def search_by_credentials(conn, username, password):
         with conn.connect() as cur:
@@ -57,15 +63,23 @@ class UserCommand:
     def find_user(conn, name):
         with conn.connect() as cur:
             try:
-                return cur.execute(select(Users.id, Users.full_name).where(Users.full_name.ilike(f"%{name}%")).order_by(Users.id.desc())).all()
+                sql = cur.execute(select(Users.id, Users.full_name).where(Users.full_name.ilike(f"%{name}%")).order_by(Users.id.desc())).all()
+                if sql == []:
+                    raise FindUserException
+                else:
+                    return sql 
             except Exception as err:
                 print(err)
+                raise FindUserException()
 
-    def add_friend(conn, value):
+    def add_friend(conn, user, friend):
         with conn.begin() as cur:
             try:
-                sql = insert(Friends).values(value)
-                cur.execute(sql)
+                invert = {"user_id" : f"{friend['friend_id']}", "friend_id" : f"{user['user_id']}"}
+                sql1 = insert(Friends).values(user | friend)
+                sql2 = insert(Friends).values(invert)
+                cur.execute(sql1)
+                cur.execute(sql2)
             except Exception as err:
                 print(err)
                 raise AddFriendException()
@@ -79,6 +93,53 @@ class UserCommand:
                 return birthday
             except:
                 print("Invalid date, please, try again!")
+
+    def search_by_id(conn, user_logged):
+        with conn.connect() as cur:
+            try:
+                sql = select(Users).where(Users.id==user_logged)
+                print(type(user_logged))
+                return cur.execute(sql).one()
+            except Exception as err:
+                print(err)
+                raise SearchByIDException()
+
+    def search_by_friend_id(conn, friends_id):
+        with conn.connect() as cur:
+            try:
+                sql = select(Users).where(Users.id==friends_id.user_id)
+                print(type(friends_id))
+                return cur.execute(sql).all()
+            except Exception as err:
+                print(err)
+                raise SearchByIDException()
+
+    def delete_account(conn, user):
+        with conn.begin() as cur:
+            try:
+                sql = delete(Users).where(Users.id==user.id)
+                return cur.execute(sql)
+            except Exception as err:
+                print(err)
+
+    def delete_friend(conn, user, friend):
+        with conn.begin() as cur:
+            try:
+                sql1 = delete(Friends).where(Friends.user_id==user.id, Friends.friend_id==friend.id)
+                sql2 = delete(Friends).where(Friends.friend_id==user.id, Friends.user_id==friend.id)
+                cur.execute(sql1)
+                cur.execute(sql2)
+            except Exception as err:
+                print(err)
+
+    def friends_select(conn, user):
+        with conn.connect() as cur:
+            try:
+                sql = select(Users).where(Users.id==Friends.friend_id, Friends.friend_id!=user.id)
+                return cur.execute(sql).all()
+            except Exception as err:
+                print(err)
+
 
 
     
